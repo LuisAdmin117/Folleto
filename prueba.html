@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR con Frame y AR.js</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+   <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script>
+</head>
+<body style="margin:0; overflow:hidden;">
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode:
+mono_and_matrix; matrixCodeType: 3x3;"
+        renderer="logarithmicDepthBuffer: true;" vr-mode-ui="enabled: false" gesture-detector
+
+id="scene">
+
+    <a-assets>
+
+     <a-asset-item id="modelo" src="modelos/plants_vs_zombies_-_peashooter.glb" timeout="10000"></a-asset-item>
+     <a-asset-item id="modelo2" src="modelos/walle_practica.glb" timeout="10000"></a-asset-item>
+     <a-asset-item id="modelo3" src="modelos/fortnite_iron_man.glb" timeout="10000"></a-asset-item>
+
+     <audio id="audio" src="audios/realidad_aumentada.mp3" preload="auto"></audio>
+     <audio id="audio2" src="audios/modelado-3D.mp3" preload="auto"></audio>
+     <audio id="audio3" src="audios/animacion-digital.mp3" preload="auto"></audio>
+     
+    </a-assets>
+
+    <a-marker type="barcode" value="5" raycaster="objects: .clickable" emitevents="true"
+    cursor="fuse: false; rayOrigin: mouse;">
+    <a-entity
+        gltf-model="#modelo" scale="0.798 0.621 0.635" rotation="-90 -90 90" class="clickable"
+        gesture-handler sound="src: #audio; autoplay: false; volume: 1">
+    </a-entity>
+            <a-entity text="value: Batman;"></a-entity>
+    </a-marker>
+
+    <a-marker type="barcode" value="10" raycaster="objects: .clickable" emitevents="true"
+    cursor="fuse: false; rayOrigin: mouse;">
+    <a-entity
+        gltf-model="#modelo2" scale="-0.001 0.001 0.001" rotation="-90 0 0" position="0.034 1.070 0.605" class="clickable"
+        gesture-handler sound="src: #audio2; autoplay: false; volume: 1">
+    </a-entity>
+    </a-marker>
+
+    <a-marker type="barcode" value="3" raycaster="objects: .clickable" emitevents="true"
+    cursor="fuse: false; rayOrigin: mouse;">
+    <a-entity
+        gltf-model="#modelo3" scale="0.803 0.654 1.019" rotation="270 0 0" position="0 0.897 0.930" animation-mixer class="clickable"
+        gesture-handler sound="src: #audio3; autoplay: false; volume: 1">
+    </a-entity>
+    </a-marker>
+
+                    <a-entity camera></a-entity>
+
+             </a-scene>
+
+             <script>
+                var delfinAudio = document.getElementById('audio');
+                var sarcosuchusAudio = document.getElementById('audio2');
+                var animacionAudio = document.getElementById('audio3');
+    
+               
+                document.querySelector('[value="5"]').addEventListener('markerFound', function () {
+                    delfinAudio.play();
+                });
+    
+                
+                document.querySelector('[value="5"]').addEventListener('markerLost', function () {
+                    delfinAudio.pause();
+                    delfinAudio.currentTime = 0;
+                });
+    
+                
+                document.querySelector('[value="10"]').addEventListener('markerFound', function () {
+                    sarcosuchusAudio.play();
+                });
+    
+              
+                document.querySelector('[value="10"]').addEventListener('markerLost', function () {
+                    sarcosuchusAudio.pause();
+                    sarcosuchusAudio.currentTime = 0;
+                });
+
+
+                document.querySelector('[value="3"]').addEventListener('markerFound', function () {
+                    animacionAudio.play();
+
+                    // Inicia o reinicia la animación
+                const modelo = document.querySelector('[gltf-model="#modelo3"]');
+                const mixer = modelo.components['animation-mixer'];
+                if (mixer) {
+                    mixer.play();
+                   }
+                });
+    
+              
+                document.querySelector('[value="3"]').addEventListener('markerLost', function () {
+                    animacionAudio.pause();
+                    animacionAudio.currentTime = 0;
+
+                    // Pausa la animación
+                 const modelo = document.querySelector('[gltf-model="#modelo3"]');
+                 const mixer = modelo.components['animation-mixer'];
+                 if (mixer) {
+                     mixer.stop();
+                   }
+                });
+            </script>
+
+            <script src="gesture-detector.js"></script>
+            <script src="gesture-handler.js"></script>
+</body>
+</html>
